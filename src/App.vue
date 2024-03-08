@@ -1,10 +1,33 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div id="app">
+    <NavbarComp />
+    <SpinnerComp v-if="loading" />
+    <router-view />
+  </div>
 </template>
+
+<script>
+import NavbarComp from './components/NavbarComp.vue';
+import SpinnerComp from './components/SpinnerComp.vue';
+
+export default {
+  components: {
+    NavbarComp,
+    SpinnerComp
+  },
+  data() {
+    return {
+      loading: true 
+    };
+  },
+  created() {
+  
+    setTimeout(() => {
+      this.loading = false; 
+    }, 3000); 
+  }
+}
+</script>
 
 <style>
 #app {
@@ -12,19 +35,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #2C3E50;
 }
-
 nav {
   padding: 30px;
 }
-
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #2C3E50;
 }
-
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #42B983;
 }
 </style>
