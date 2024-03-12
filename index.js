@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import cors from 'cors';
 import productsRouter from './routes/products.js';
 import userRoutes from './routes/users.js';
+import  ordersRoutes from './routes/orders.js';
 import errorHandler from './middleware/errorHandling.js'; 
 import {authenticateUser,logout} from  './middleware/userAuthenticate.js';
 import cookieParser from 'cookie-parser';
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 3800;
 
 const app = express();
 app.use(cors({
-  origin: " http://localhost:8081 ", 
+  origin: " http://localhost:8080", 
   credentials: true
 }));
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static('public'));
 app.use('/products', productsRouter);
 app.use('/users', userRoutes);
+app.use('/orders', ordersRoutes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
