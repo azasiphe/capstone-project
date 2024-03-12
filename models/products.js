@@ -15,7 +15,7 @@ const getSingle = async (id) => {
 
 const postProduct = async (car_name, quantity, amount, image_url, category) => {
   let [item] = await pool.query(`
-    INSERT INTO products (car_name, quantity, amount, image_url, category) VALUES (?,?,?,?,?)
+    INSERT INTO products (car_name, quantity, amount, image_url, category,top_speed, engine, transmission) VALUES (?,?,?,?,?,?,?,?)
   `, [car_name, quantity, amount, image_url, category]);
   return getProducts();
 };
@@ -27,12 +27,12 @@ const deleteProduct = async (id) => {
   return getProducts();
 };
 
-const updateProduct = async (id, car_name, quantity, amount, image_url, category) => {
+const updateProduct = async (id, car_name, quantity, amount, image_url, category,top_speed, engine, transmission) => {
   await pool.query(`
     UPDATE products
-    SET car_name=?, quantity=?, amount=?, image_url=?, category=?
+    SET car_name=?, quantity=?, amount=?, image_url=?, category=?,top_speed=?, engine=?, transmission=?,
     WHERE id=?
-  `, [car_name, quantity, amount, image_url, category, id]);
+  `, [car_name, quantity, amount, image_url, category,top_speed, engine, transmission, id]);
   return getSingle(id);
 };
 

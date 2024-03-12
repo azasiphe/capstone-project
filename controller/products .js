@@ -21,9 +21,9 @@ const getSingleProduct = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
-  const { car_name, quantity, amount, image_url, category } = req.body;
+  const { car_name, quantity, amount, image_url, category,top_speed, engine, transmission} = req.body;
   try {
-    await postProduct(car_name, quantity, amount, image_url, category);
+    await postProduct(car_name, quantity, amount, image_url, category,top_speed, engine, transmission);
     const products = await getProducts();
     res.json(products);
   } catch (error) {
@@ -44,9 +44,9 @@ const deleteProductByID = async (req, res) => {
 }
 
 const updateProductByID = async (req, res) => {
-  const { car_name, quantity, amount, image_url, category } = req.body;
+  const { car_name, quantity, amount, image_url, category ,top_speed, engine, transmission} = req.body;
   try {
-    await updateProduct(req.params.id, car_name, quantity, amount, image_url, category);
+    await updateProduct(req.params.id, car_name, quantity, amount, image_url, category,top_speed, engine, transmission);
     const products = await getProducts();
     res.json(products);
   } catch (error) {
