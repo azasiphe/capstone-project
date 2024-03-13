@@ -72,7 +72,11 @@ h1{
   font-weight: bolder;
 position: relative;
 top: 90px;
-  color: white;
+
+  color: aliceblue;
+
+  text-shadow: blue 3px 4px 2px;
+
   margin: 0 0 0 3%;
   
 }

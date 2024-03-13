@@ -1,80 +1,106 @@
+
 import { createStore } from 'vuex';
 import axios from 'axios';
-
+axios.defaults.withCredentials= true;
 const baseUrl = ' http://localhost:3800';
 
 export default createStore({
   state: {
     products: [],
-    users:[]
+    product:[],
+    users: [],
+    cart:[],
+    token: [],
+    loginError: [],
+    registrationError: [],
+    
   },
   getters: {
-    allProducts(state) {
-      return state.products;
-    },
-    allusers(state) {
-      return state.users;
-    }
+    allProducts: state => state.products,
+    getSingleProduct: state => state.product
     
   },
   mutations: {
     SET_PRODUCTS(state, products) {
       state.products = products;
     },
-    SET_USERS(state, users) { 
-      state.users = users; 
-    }
-  },
+    SET_PRODUCT(state, product) {
+      state.products = product; 
+    },
+    addToCart(state, item) {
+      state.cart.push(item);
+    },
+    setUser(state, users) {
+      state.users = users;
+    },
+    setToken(state, token) {
+      state.token = token;
+    },
+    setLoginError(state, error) {
+      state.loginError = error;
+    },
+    setRegistrationError(state, error) {
+      state.registrationError = error;
+    },
+    clearErrors(state) {
+      state.loginError = null;
+      state.registrationError = null;
+    },
+    
+    },
+  
   actions: {
-    async fetchProducts({commit}) {
+    async fetchProducts({ commit }) {
       try {
         const response = await axios.get(`${baseUrl}/products`);
-        const products = await response.data 
-        if(products){
-          commit('SET_PRODUCTS', products);
-        }
+        commit('SET_PRODUCTS', response.data);
       } catch (error) {
         console.error(error);
       }
-    }
-  ,
-  async fetchusers({commit}) {
-    try {
-      const response = await axios.get(`${baseUrl}/users`);
-      const users = await response.data; 
-      if(users){
-        commit('SET_USERS', users);
+    },
+    async fetchProduct({ commit }, id) {
+      try {
+        const response = await axios.get(`${baseUrl}/products/${id}`);
+       console.log(response.data)
+        commit('SET_PRODUCT', response.data);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-   
-  },
- async postUser({ commit }, newItem) {
-  try {
-    await axios.post(baseUrl + '/users', newItem); 
-    commit('fetchusers');
-    // window.alert('you have created an account.'); 
-  } catch (error) {
-    console.error(error);
-   
-  }
-
-},
-
-   async deleteusers({commit}, userID){
-    await axios.delete(baseUrl+`/users/${userID}`)
-    window.location.reload()
-   },
-  
-   async editusers({commit}, update){
-    console.log(update);
-    await axios.patch(baseUrl+'/users/' + update.userID, update)
-
-   },
-},
-modules: {
-}
-})
+    },
+    async login({ commit }, { emailAdd, userPass }) {
+      console.log('login');
+      try {
+        const response = await axios.post(`${baseUrl}/login`, { emailAdd, userPass });
+        commit('setUser', response.data.user);
+        commit('setToken', response.data.token);
+        alert('  you have login successfully!!!');
+       
+        this.$router.push('/');
+      } catch (error) {
+        commit('setLoginError', error.response);
+      }
+    },
+    async register({ commit }, userData) {
+      try {
+        const response = await axios.post(`${baseUrl}/register`, userData);
+        commit('setUser', response.data.user);
+        commit('setToken', response.data.token);
+        alert('Account created successfully!!!');
+      
+        this.$router.push('/');
+      } catch (error) {
+        commit('setRegistrationError', error.response);
+      }
+    },
+    logout({ commit }) {
+      commit('setUser', null);
+      commit('setToken', null);
+      alert('you have log out!');
     
-  ;
+        this.$router.push('/login');
+    },
+  }
+});
+
+  
+ 

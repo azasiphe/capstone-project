@@ -17,22 +17,25 @@
               <router-link to="/products" class="nav-link">Garage</router-link>
             </li>
             <li class="nav-item">
+            <router-link to="/cart" class="nav-link">
+              <i class="bi bi-bag"></i> 
+            </router-link>
+          </li>
+            <li class="nav-item">
               <router-link to="/checkout" class="nav-link">Checkout</router-link>
             </li>
             <li class="nav-item">
               <router-link to="/contact" class="nav-link">Contact</router-link>
             </li>
-            <li class="nav-item">
-              <router-link to="/register" class="nav-link">Register</router-link>
-            </li>
-          
-            
-            <li class="nav-item">
-              <router-link to="/profile" class="nav-link">Profile</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link to="/login" class="nav-link">Login</router-link>
-            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle" style="font-size: 24px;"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><router-link to="/register" class="dropdown-item">Register</router-link></li>
+              <li><router-link to="/login" class="dropdown-item">Login</router-link></li>
+            </ul>
+          </li>
           </ul>
         </div>
       </div>
