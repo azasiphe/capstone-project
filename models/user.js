@@ -23,11 +23,11 @@ const getUserById = async (id) => {
     return rows[0];
 };
 
+
 const checkUser = async (emailAdd) => {
     const [[{userPass}]] = await pool.query(`SELECT userPass FROM users WHERE emailAdd = ?`, [emailAdd]);
     return userPass;
 };
-
 
 export { getUserById, registerUser, getAllUsers, updateUserById, deleteUserById, checkUser };
 

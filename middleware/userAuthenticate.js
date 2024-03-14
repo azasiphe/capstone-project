@@ -1,32 +1,35 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { checkUser } from '../models/user.js';
+
+
 const authenticateUser = async (req, res, next) => {
   try {
     const { emailAdd, userPass } = req.body;
 
+    if (!emailAdd || !userPass) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
     const hashedPassword = await checkUser(emailAdd);
 
     if (!hashedPassword) {
-      throw new Error('User not found');
+      throw new Error('Invalid email or password');
     }
+    const passwordMatch = await bcrypt.compare(userPass, hashedPassword);
+    if (!passwordMatch) {
+      throw new Error('Invalid email or password');
+    }
+    const token = jwt.sign({ emailAdd }, process.env.SECRET_KEY, { expiresIn: '2h' });
 
-    bcrypt.compare(userPass, hashedPassword, (err, result) => {
-      if (result === true) {
-        const token = jwt.sign({ emailAdd: emailAdd }, process.env.SECRET_KEY, { expiresIn: '2h' });
-        res.cookie('token', token, { httpOnly: true }); 
-        res.send({ msg: 'You have logged in successfully' });
-        console.log(token);
-      } else {
-        throw new Error('Invalid email or password');
-      }
-    });
+    res.cookie('token', token, { httpOnly: true });
+    next();
   } catch (error) {
-    console.error('Error:', error.message);
-    res.status(400).send(error.message);
+    console.error('Authentication Error:', error.message);
+    res.status(400).json({ error: error.message });
   }
 };
-  
+
 const logout = async (req, res) => {
   try {
     res.clearCookie('token');
@@ -36,5 +39,6 @@ const logout = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 export {authenticateUser,logout} 

@@ -1,10 +1,29 @@
 import { registerUser, getAllUsers, getUserById, updateUserById, deleteUserById } from '../models/user.js';
 import bcrypt from 'bcrypt';
-
-
-const login = async (req,res)=>{
- 
-}
+import jwt from 'jsonwebtoken'
+const login = async (req, res) => {
+    try {
+      const { emailAdd, userPass } = req.body;
+      if (!emailAdd || !userPass) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+      const hashedPassword = await checkUser(emailAdd);
+      if (!hashedPassword) {
+        throw new Error('Invalid email or password');
+      }
+      const passwordMatch = await bcrypt.compare(userPass, hashedPassword);
+      if (!passwordMatch) {
+        throw new Error('Invalid email or password');
+      }
+      const token = jwt.sign({ emailAdd }, process.env.SECRET_KEY, { expiresIn: '2h' });
+      res.cookie('token', token, { httpOnly: true });
+  
+      res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
 const getAll = async (req, res) => {
     try {
         const users = await getAllUsers();
