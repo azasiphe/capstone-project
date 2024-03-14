@@ -2,26 +2,27 @@
   <div class="products">
     <h1 class="display-1" :style="{ }">{{ typedHeading }}</h1>
     <div class="container mt-4">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle ml-4" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          Filter
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><button @click="sortByPrice" class="btn btn-primary">Sort by Price</button></li>
-          <li><button @click="sortByAlphabet" class="btn btn-primary">Sort Alphabetically</button></li>
-        </ul>
+      <div class="d-flex align-items-center"> 
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle ml-4" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><button @click="sortByPrice" class="btn btn-primary">Sort by Price</button></li>
+            <li><button @click="sortByAlphabet" class="btn btn-primary">Sort Alphabetically</button></li>
+          </ul>
+        </div>
+        <input type="text" v-model="searchTerm" placeholder="Search..." class="form-control mb-2 ml-4" />
       </div>
-      <input type="text" v-model="searchTerm" placeholder="Search..." class="form-control mb-3" />
-     
+
       <div class="row">
         <div v-for="product in filteredProducts" :key="product.id" class="col-md-4">
-          <div class="card mb-4" @mouseover="hovering = true" @mouseleave="hovering = false" :class="{ 'hovered': hovering }">
-            <h5 class="card-title" :style="{ fontWeight: 'bold'}">{{ product.car_name }}</h5>
-
-            <img :src="product.image_url" class="" :alt="product.car_name" />
-            <p class="card-text" :style="{ fontWeight: 'bold' }">Amount: {{ product.amount }}</p>
+          <div class="card mb-4" @mouseover="hovering = product.id" @mouseleave="hovering = null">
+            <h5 class="card-title">{{ product.car_name }}</h5>
+            <img :src="product.image_url" width="60%" class="img-fluid" :alt="product.car_name" />
+            <p class="card-text">Amount: {{ product.amount }}</p>
             <div class="card-body">
-              <router-link v-if="hovering" @click="fetchProduct(product.id)" :to="{ name: 'view', params: { id: product.id }}" class="btn btn-dark">View more details</router-link>
+              <router-link v-if="hovering === product.id" @click="fetchProduct(product.id)" :to="{ name: 'view', params: { id: product.id }}" class="btn btn-dark">View more details</router-link>
             </div>
           </div>
         </div>
@@ -44,9 +45,6 @@ export default {
       });
     };
 
-    const textColor = ref('black');
-    const fontWeight = ref('normal');
-    const fontSize = ref('60px');
     const typedHeading = ref('');
     let typingIndex = 0;
     let typingInterval;
@@ -63,7 +61,6 @@ export default {
 
     startTyping();
 
-    const hovering = ref(false);
     const searchTerm = ref('');
     const sortedByPrice = ref(false);
 
@@ -90,15 +87,12 @@ export default {
     return {
       products,
       fetchProducts,
-      hovering,
-      textColor,
-      fontWeight,
-      fontSize,
       typedHeading,
       searchTerm,
       filteredProducts,
       sortByPrice,
-      sortByAlphabet
+      sortByAlphabet,
+      hovering: ref(null) 
     };
   },
   methods: {
@@ -113,6 +107,7 @@ export default {
 </script>
 
 <style scoped>
+
 h1
 { 
   color: aliceblue;
@@ -125,13 +120,17 @@ h5{
   text-shadow:blue 8px 8px 20px;
 }
 p{
-  color: aliceblue;
-text-decoration: underline 3px solid white;
-  font-size: 15px;
+  color: white;
+/* text-decoration: underline 3px solid white; */
+background-color: black;
+border-radius: 50%;
+border:2px  solid blue;
+font-size: 15px;
   text-shadow:blue 8px 8px 20px;
 }
 
 .card {
+  width: 80%; 
   border: none;
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -154,7 +153,27 @@ text-decoration: underline 3px solid white;
 .card button {
   display: none;
 }
+.btn-secondary{
+  background-color: transparent;
+ border-color:blue ;
+  margin: 0 0 0 20%;
+}
+.btn-primary {
+  background-color: transparent;
+  border-color: transparent;
+  color: black;
 
+}
+input.form-control {
+  width: 50%;
+  border-color: blue ;
+ margin: 0 0 0 29%;
+ 
+}
+.btn-primary:hover {
+  background-color:blue;
+  border-color: transparent;
+}
 .card:hover button {
   display: block;
 }

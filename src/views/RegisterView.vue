@@ -64,19 +64,19 @@ export default {
     return {
       firstName: '',
       lastName: '',
-      Age: null, 
-      Gender: '', 
+      Age: null,
+      Gender: '',
       Role: '',
       emailAdd: '',
       userPass: '',
-      userProfile: '', 
+      userProfile: '',
       saveAccount: false,
       submitting: false
     };
   },
   methods: {
     async register() {
-      this.submitting = true; 
+      this.submitting = true;
       try {
         await this.$store.dispatch('register', {
           firstName: this.firstName,
@@ -89,14 +89,11 @@ export default {
           userProfile: this.userProfile,
           saveAccount: this.saveAccount,
         });
-     
         if (!this.$store.state.registrationError) {
           alert('Account created successfully!');
           this.$router.push('/');
         }
-      } 
-    
-      catch (error) {
+      } catch (error) {
         console.error(error);
         if (error.response && error.response.status === 409) {
           alert('User already exists! Please log in.');
@@ -105,7 +102,7 @@ export default {
           alert('Registration failed! Please try again.');
         }
       } finally {
-        this.submitting = false; 
+        this.submitting = false;
       }
     },
   },

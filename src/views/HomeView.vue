@@ -1,7 +1,7 @@
 
 <template>
   <div class="page-container">
-    <h1>Turbo Thrust Autos</h1>
+    <h1 font-size="50">Turbo Thrust Autos</h1>
     <h1 class="h1">Welcome to Turbo Thrust Autos your<br> destination for high-performance sports cars<br> curated with precision and passion.
       <br> Embark on an exhilarating journey today.</h1>
     <div class="content">
@@ -33,7 +33,17 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+ 
+    <div>
+      
+      <h2>*features we have*</h2>
+      <video controls width="1500" height="520">
+      <source src="https://streamable.com/aeg559" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    </div>
+  
 </template>
 
 <style scoped>
@@ -76,6 +86,20 @@ top: 90px;
   color: aliceblue;
 
   text-shadow: blue 3px 4px 2px;
+
+  margin: 0 0 0 3%;
+  
+}
+h2{
+  text-align: center;
+  text-decoration: underline;
+  font-weight: bolder;
+position: relative;
+bottom: 80px;
+font-size: 80px;
+  color: aliceblue;
+
+  text-shadow: red 3px 4px 15px;
 
   margin: 0 0 0 3%;
   

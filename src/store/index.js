@@ -35,17 +35,22 @@ export default createStore({
     },
     setToken(state, token) {
       state.token = token;
+      localStorage.setItem('token', token);
     },
-    setLoginError(state, error) {
-      state.loginError = error;
+    clearToken(state) {
+      state.token = null;
+      localStorage.removeItem('token');
     },
     setRegistrationError(state, error) {
       state.registrationError = error;
     },
-    clearErrors(state) {
-      state.loginError = null;
-      state.registrationError = null;
+    setLoginError(state, error) {
+      state.loginError = error;
     },
+    clearErrors(state) {
+      state.registrationError = null;
+      state.loginError = null;
+    }
     
     },
   
@@ -67,30 +72,28 @@ export default createStore({
         console.error(error);
       }
     },
-    async login({ commit }, { emailAdd, userPass }) {
-      console.log('login');
-      try {
-        const response = await axios.post(`${baseUrl}/login`, { emailAdd, userPass });
-        commit('setUser', response.data.user);
-        commit('setToken', response.data.token);
-        alert('  you have login successfully!!!');
-       
-        this.$router.push('/');
-      } catch (error) {
-        commit('setLoginError', error.response);
-      }
-    },
     async register({ commit }, userData) {
       try {
         const response = await axios.post(`${baseUrl}/register`, userData);
-        commit('setUser', response.data.user);
-        commit('setToken', response.data.token);
-        alert('Account created successfully!!!');
-      
-        this.$router.push('/');
+        const { token } = response.data;
+        commit('setToken', token);
+        commit('setRegistrationError', null);
       } catch (error) {
-        commit('setRegistrationError', error.response);
+        commit('setRegistrationError', error);
       }
+    },
+    async login({ commit }, { emailAdd, userPass }) {
+      try {
+        const response = await axios.post(`${baseUrl}/login`, { emailAdd, userPass });
+        const { token } = response.data;
+        commit('setToken', token);
+        commit('setLoginError', null);
+      } catch (error) {
+        commit('setLoginError', error);
+      }
+    },
+    logout({ commit }) {
+      commit('clearToken');
     },
     logout({ commit }) {
       commit('setUser', null);

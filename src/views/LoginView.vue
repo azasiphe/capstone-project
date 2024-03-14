@@ -40,25 +40,40 @@
 
 </body>
 </template>
+
 <script>
+export default {
+  data() {
+    return {
+      emailAdd: '',
+      userPass: '',
+    };
+  },
+  methods: {
+    async login() {
+      this.$store.commit('clearErrors');
+      try {
+        await this.$store.dispatch('login', {
+          emailAdd: this.emailAdd,
+          userPass: this.userPass
+        });
+        if (!this.$store.state.loginError) {
+          alert('Successfully logged in!');
+          this.$router.push('/');
+        }
+      } catch (error) {
+        console.error(error);
+        if (error.response && error.response.status === 401) {
+          alert('Invalid credentials! Please try again.');
+        } else {
+          alert('Login failed! Please try again.');
+        }
+      }
+    },
+  },
+};
+</script>
 
-
- export default 
-{ data() { return { emailAdd: '', userPass: '', 
-
-}; },
-
-methods: { async login() { this.$store.commit('clearErrors'); 
-await this.$store.dispatch('login', { emailAdd: this.emailAdd, userPass: this.userPass });
- if (!this.$store.state.loginError)
-  { 
-    alert(' successfully logged in!!!');
-    
-        this.$router.push('/');
-} 
-}, }, };
- 
- </script> 
 <style  scoped>
 body {
   width: 100%;

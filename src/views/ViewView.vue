@@ -4,32 +4,33 @@
     <div v-for="product in products" :key="product.id" class="container">
       <div class="row">
         <div class="col-md-6">
-          <h2 style="color: #ff1493; font-weight: bold; text-decoration: underline white 2px;">{{ product.car_name }}</h2>
+          <h2 style="">{{ product.car_name }}</h2>
           <img :src="product.image_url" :alt="product.car_name" />
         </div>
         <div class="col-md-6">
-          <div class="content-container">
-            <i id="ico" class="bi bi-speedometer2" style="color: blue; font-size: 32px;"></i>
-            <span style="color: white;">Top Speed</span>
-            <p style="color: white;">{{ product.top_speed }} km/h</p>
-          </div>
-          <div class="content-container">
-            <i id="ico" class="bi bi-gear-fill" style="color: blue; font-size: 32px;"></i> 
-            <span style="color: white;">Engine</span>
-            <p style="color: white;">{{ product.engine }}</p>
-          </div>
-          <div class="content-container">
-            <i id="ico" class="bi bi-arrow-up-left-circle-fill" style="color: blue; font-size: 32px;"></i>
-            <span style="color: white;">Transmission</span>
-            <p style="color: white;">{{ product.transmission }}</p>
-          </div>
-        </div>
+  <div class="content-container">
+    <i id="ico" class="bi bi-speedometer2" style="color: blue; font-size: 90px;"></i>
+    <span style="color: white; font-size: 30px;">Top Speed</span>
+    <p style="color: white; font-size: 20px;">{{ product.top_speed }} km/h</p>
+  </div>
+  <div class="content-container">
+    <i id="ico" class="bi bi-gear-fill" style="color: blue; font-size: 90px;"></i> 
+    <span style="color: white; font-size: 30px;">Engine</span>
+    <p style="color: white; font-size: 20px;">{{ product.engine }}</p>
+  </div>
+  <div class="content-container">
+    <i id="ico" class="bi bi-arrow-up-left-circle-fill" style="color: blue; font-size: 90px;"></i>
+    <span style="color: white; font-size: 30px;">Transmission</span>
+    <p style="color: white; font-size: 20px;">{{ product.transmission }}</p>
+  </div>
+</div>
+
+
       </div>
       <div class="row">
         <div class="col-md-12">
-          <p style="color: white;">Quantity: {{ product.quantity }}</p>
-          <p style="color: white;">Price: {{ product.price }}</p>
-          <p style="color: white;">Amount: {{ product.amount }}</p>
+          <!-- <p style="color: white;">Quantity: {{ product.quantity }}</p> -->
+          <p style="color: blue; font-size: 20px;">Amount: {{ product.amount }}</p>
           <button @click="addToCart" style="color: white; background-color: blue; border: none; padding: 10px 20px; cursor: pointer;">Add to Cart</button>
         </div>
       </div>
@@ -81,5 +82,11 @@ export default {
   display: flex;
   flex-direction: column;
  padding: 50px;
+}
+h2{
+  font-size: 40px;
+  text-shadow: 5px 5px 10px rgba(16, 207, 245, 0.8);
+color: #f51014;
+text-decoration: underline 2px solid white;
 }
 </style>
