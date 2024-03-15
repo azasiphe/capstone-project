@@ -2,30 +2,32 @@
   <div class="users-table vh-100">
     <div>
    
-   <nav>
+   <nav class="nav">
      <ul>
-       <li><router-link to="/users">Users</router-link></li>
-       <li><router-link to="/prod">Products</router-link></li>
-       <li><router-link to="/orders">Orders</router-link></li>
+       <router-link to="/users">|Users|</router-link>
+       <router-link to="/prod">Products|</router-link>
+       <router-link to="/orders">Orders|</router-link>
      </ul>
    </nav>
    
  
    <router-view></router-view>
  </div>
-    <div>
-
-  <input v-model="firstName" type="text" placeholder="First Name">
-  <input v-model="lastName" type="text" placeholder="Last Name">
-  <input v-model="Age" type="number" placeholder="Age">
-  <input v-model="Gender" type="text" placeholder="Gender">
-  <input v-model="Role" type="text" placeholder="Role">
-  <input v-model="emailAdd" type="text" placeholder="Email">
-  <input v-model="userpadd" type="text" placeholder="userpass">
-  <input v-model="userProfile" type="text" placeholder="User Profile">
-  <button class="add" @click="postUser">Add</button>
+ <div class="modal" v-if="showAddUserModal">
+      <div class="modal-content">
+        <span class="close" @click="closeAddUserModal">&times;</span>
+        <h2>Add User</h2>
+        <input v-model="firstName" type="text" placeholder="First Name">
+        <input v-model="lastName" type="text" placeholder="Last Name">
+        <input v-model="age" type="number" placeholder="Age">
+        <input v-model="gender" type="text" placeholder="Gender">
+        <input v-model="role" type="text" placeholder="Role">
+        <input v-model="email" type="text" placeholder="Email">
+        <input v-model="password" type="password" placeholder="Password">
+        <input v-model="userProfile" type="text" placeholder="User Profile">
+        <button class="add" @click="postUser">Add</button>
+      </div>
 </div>
-
     <table>
       <thead>
         <tr>
@@ -69,11 +71,11 @@ export default {
     const store = useStore();
 
     const users = computed(() => store.getters.allusers);
-
+ 
     onMounted(() => {
       store.dispatch('fetchusers');
     });
-
+    const showAddUserModal = ref(false);
     const userID = ref(null);
   const firstName = ref(null);
   const lastName = ref(null);
@@ -129,10 +131,21 @@ try {
     userpadd.value = null;
     userProfile.value = null;
   };
+  const openAddUserModal = () => {
+      showAddUserModal.value = true;
+    };
+
+    const closeAddUserModal = () => {
+      showAddUserModal.value = false;
+      clearFields();
+    };
 
 
     return {
       users,
+      showAddUserModal,
+      openAddUserModal,
+      closeAddUserModal,
       clearFields,
       postUser,
       deleteUser,
@@ -147,6 +160,7 @@ try {
 <style scoped>
 .users-table {
   text-align: center;
+  color: antiquewhite;
 }
 
 table {
@@ -157,23 +171,25 @@ table {
 th, td {
   padding: 10px;
   border: 1px solid #ddd;
+
 }
 
 th {
   background-color: #f2f2f2;
+  color: black;
 }
-.navbar {
+.nav {
   background-color: black;
+  color: white;
   padding: 10px;
-}
-
-.navbar-nav {
   display: flex;
   list-style: none;
-  padding: 0;
+
 }
 
-.navbar-nav li {
+
+
+.nav li {
   margin-right: 20px;
 }
 

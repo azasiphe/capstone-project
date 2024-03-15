@@ -17,6 +17,7 @@ export default createStore({
   },
   getters: {
     allProducts: state => state.products,
+    allusers: state => state.users,
     getSingleProduct: state => state.product
     
   },
@@ -30,8 +31,8 @@ export default createStore({
     addToCart(state, item) {
       state.cart.push(item);
     },
-    setUser(state, users) {
-      state.users = users;
+    SET_USERS(state, users) { 
+      state.users = users; 
     },
     setToken(state, token) {
       state.token = token;
@@ -102,6 +103,18 @@ export default createStore({
     
         this.$router.push('/login');
     },
+    async fetchusers({commit}) {
+      try {
+        const response = await axios.get(`${baseUrl}/users`);
+        const users = await response.data; 
+        if(users){
+          commit('SET_USERS', users);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
   }
 });
 

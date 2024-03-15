@@ -13,7 +13,7 @@
     <router-view></router-view>
   </div>
 </template>
-<style>
+<style scoped>
 .navbar {
   background-color: black;
   padding: 10px;
@@ -36,4 +36,5 @@
 
 .navbar-nav li a:hover {
   color: lightgrey;
-}</style>
+}
+</style>

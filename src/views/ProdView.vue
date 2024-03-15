@@ -2,19 +2,13 @@
     <div class="products vh-100">
       <div>
         <nav class="navbar">
-          <ul class="navbar-nav">
-            <li><router-link to="/users">Users</router-link></li>
-            <li><router-link to="/prod">Products</router-link></li>
-            <li><router-link to="/orders">Orders</router-link></li>
-          </ul>
+          <router-link to="/users" class="nav-link">Users</router-link>
+          <router-link to="/prod" class="nav-link">Products</router-link>
+          <router-link to="/orders" class="nav-link">Orders</router-link>
         </nav>
   
         <div class="add-product">
-          <input v-model="car_name" type="text" placeholder="Car Name">
-          <input v-model="quantity" type="number" placeholder="Quantity">
-          <input v-model="amount" type="number" placeholder="Amount">
-          <input v-model="prodUrl" type="text" placeholder="Product Image URL">
-          <button class="add" @click="postProduct">Add</button>
+          <button class="add" @click="openAddModal"><i class="bi bi-plus-square"></i> Add Product</button>
         </div>
   
         <table class="table-admin">
@@ -25,6 +19,10 @@
               <th>Quantity</th>
               <th>Amount</th>
               <th>Product Image</th>
+              <th>Category</th>
+              <th>Top Speed</th>
+              <th>Engine</th>
+              <th>Transmission</th>
               <th></th>
               <th></th>
             </tr>
@@ -38,123 +36,115 @@
               <td>
                 <img :src="product.image_url" alt="Product Image" style="max-width: 100px; max-height: 100px;">
               </td>
-              <td><button class="edit" @click="openEditModal(product)">Edit</button></td>
-              <td><button class="delete" @click="deleteProduct(product.id)">Delete</button></td>
+              <td>{{ product.category }}</td>
+              <td>{{ product.top_speed }}</td>
+              <td>{{ product.engine }}</td>
+              <td>{{ product.transmission }}</td>
+              <td><button class="edit" @click="openEditModal(product)"><i class="fas fa-edit"></i> Edit</button></td>
+              <td><button class="delete" @click="deleteProduct(product.id)"><i class="fas fa-trash-alt"></i> Delete</button></td>
             </tr>
           </tbody>
         </table>
       </div>
   
-      <!-- Edit Product Modal -->
-      <div class="modal" v-if="editMode">
+      
+      <div class="modal" v-if="modalVisible">
         <div class="modal-content">
-          <span class="close" @click="cancelEdit">&times;</span>
-          <h2>Edit Product</h2>
-          <input v-model="car_name" type="text" placeholder="Car Name">
-          <input v-model="quantity" type="number" placeholder="Quantity">
-          <input v-model="amount" type="number" placeholder="Amount">
-          <input v-model="image_url" type="text" placeholder="Product Image URL">
-          <button @click="saveEdit">Save</button>
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>{{ modalType === 'add' ? 'Add Product' : 'Edit Product' }}</h2>
+          <input v-model="form.car_name" type="text" placeholder="Car Name">
+          <input v-model="form.quantity" type="number" placeholder="Quantity">
+          <input v-model="form.amount" type="number" placeholder="Amount">
+          <input v-model="form.image_url" type="text" placeholder="Product Image URL">
+          <input v-model="form.top_speed" type="text" placeholder="Product top speed">
+          <input v-model="form.engine" type="text" placeholder="Product engine">
+          <input v-model="form.transmission" type="text" placeholder="Product transmission">
+          
+          <button @click="submitForm">{{ modalType === 'add' ? 'Add' : 'Save' }}</button>
         </div>
       </div>
     </div>
   </template>
   
   <script>
-  import { onMounted, computed, ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useStore } from 'vuex';
   
   export default {
     setup() {
       const store = useStore();
+      const products = store.getters.allProducts;
+      const modalVisible = ref(false);
+      const modalType = ref('');
+      const form = ref({
+        car_name: '',
+        quantity: '',
+        amount: '',
+        image_url: '',
+        top_speed :'',
+        engine:'',
+        transmission:''
+      });
   
-      const products = computed(() => store.getters.allProducts);
+      const openAddModal = () => {
+        modalType.value = 'add';
+        modalVisible.value = true;
+      };
+  
+      const openEditModal = (product) => {
+        modalType.value = 'edit';
+        form.value = { ...product };
+        modalVisible.value = true;
+      };
+  
+      const closeModal = () => {
+        modalVisible.value = false;
+        form.value = {
+          car_name: '',
+          quantity: '',
+          amount: '',
+          image_url: '',
+          top_speed :'',
+        engine:'',
+        transmission:''
+        };
+      };
+  
+      const submitForm = () => {
+        if (modalType.value === 'add') {
+          store.dispatch('addProduct', form.value);
+        } else if (modalType.value === 'edit') {
+          store.dispatch('updateProduct', form.value);
+        }
+        closeModal();
+      };
+  
+      const deleteProduct = (productId) => {
+        if (confirm('Are you sure you want to delete this product?')) {
+          store.dispatch('deleteProduct', productId);
+        }
+      };
   
       onMounted(() => {
         store.dispatch('fetchProducts');
       });
   
-      const prodID = ref(null);
-      const prodName = ref(null);
-      const quantity = ref(null);
-      const amount = ref(null);
-      const prodUrl = ref(null);
-      const editMode = ref(false);
-      let editingProduct = null;
-  
-      const deleteProduct = (prodID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-        if (confirmDelete) {
-          store.dispatch('deleteProduct', prodID);
-          window.alert('Product has been deleted.');
-        }
-      };
-  
-      const openEditModal = (product) => {
-        editingProduct = product;
-        prodID.value = product.id;
-        prodName.value = product.car_name;
-        quantity.value = product.quantity;
-        amount.value = product.amount;
-        prodUrl.value = product.image_url;
-        editMode.value = true;
-      };
-  
-      const saveEdit = () => {
-        const editedProduct = {
-          id: prodID.value,
-          car_name: prodName.value,
-          quantity: quantity.value,
-          amount: amount.value,
-          image_url: prodUrl.value
-        };
-        store.dispatch('updateProduct', editedProduct);
-        editMode.value = false;
-        clearFields();
-      };
-  
-      const clearFields = () => {
-        prodID.value = null;
-        prodName.value = null;
-        quantity.value = null;
-        amount.value = null;
-        prodUrl.value = null;
-      };
-  
-      const cancelEdit = () => {
-        editMode.value = false;
-        clearFields();
-      };
-  
-      const postProduct = () => {
-        const newProduct = {
-          car_name: prodName.value,
-          quantity: quantity.value,
-          amount: amount.value,
-          image_url: prodUrl.value
-        };
-        store.dispatch('postProduct', newProduct);
-        clearFields();
-        window.alert('Product has been added.');
-      };
-  
       return {
         products,
-        prodID,
-        prodName,
-        quantity,
-        amount,
-        prodUrl,
-        editMode,
-        editingProduct,
-        saveEdit,
-        cancelEdit,
-        deleteProduct,
-        postProduct
+        modalVisible,
+        modalType,
+        form,
+        openAddModal,
+        openEditModal,
+        closeModal,
+        submitForm,
+        deleteProduct
       };
     }
   };
   </script>
+  
+
   
  
   
@@ -164,6 +154,7 @@
 
 .products{
     color: white;
+background-size: cover;
     
   }
   table {
@@ -191,15 +182,15 @@
   padding: 13px;
   border: 4px;
   border-radius: 11px;
-  background-color: white;
-  color: black;
+  background-color: blue;
+  color: antiquewhite;
 }
 .delete{
   padding: 10px;
   border: 3px;
   border-radius: 10px;
-  background-color: black;
-  color: yellow;
+  background-color: blue;
+  color: white;
   
 }
 .delete:hover{
