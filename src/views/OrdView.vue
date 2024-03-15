@@ -1,19 +1,20 @@
 <template>
-      <div>
+        <div>
    
-    <nav>
-      <ul>
-        <li><router-link to="/users">Users</router-link></li>
-        <li><router-link to="/prod">Products</router-link></li>
-        <li><router-link to="/orders">Orders</router-link></li>
-      </ul>
-    </nav>
-    
-  
-    <router-view></router-view>
-  </div>
+   <nav>
+     <ul>
+       <li><router-link to="/users">Users</router-link></li>
+       <li><router-link to="/prod">Products</router-link></li>
+       <li><router-link to="/orders">Orders</router-link></li>
+     </ul>
+   </nav>
+   
+ 
+   <router-view></router-view>
+ </div>
 </template>
 <style>
+
 .navbar {
   background-color: black;
   padding: 10px;
@@ -36,4 +37,5 @@
 
 .navbar-nav li a:hover {
   color: lightgrey;
-}</style>
+}
+</style>
