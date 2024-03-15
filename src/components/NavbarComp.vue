@@ -16,6 +16,9 @@
           <li class="nav-item">
             <router-link to="/products" class="nav-link">Garage</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/admin" class="nav-link">Admin</router-link>
+          </li>
           <!-- Display cart and checkout links if user is authenticated -->
           <li v-if="isLoggedIn" class="nav-item">
             <router-link to="/cart" class="nav-link">
