@@ -1,17 +1,34 @@
 <template>
-        <div>
-   
-   <nav>
-     <ul>
-       <li><router-link to="/users">Users</router-link></li>
-       <li><router-link to="/prod">Products</router-link></li>
-       <li><router-link to="/orders">Orders</router-link></li>
-     </ul>
-   </nav>
-   
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+  <div class="container-fluid">
+    
+
  
-   <router-view></router-view>
- </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+   
+    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/prod">Products</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/orders">Orders</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/users">Users</router-link>
+        </li>
+      
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+     
+    </div>
+  </div>
+</nav>
  <div>
      
       <div v-if="orders.length">
@@ -19,21 +36,21 @@
         <ul>
           <li v-for="order in orders" :key="order.orderID">
             Order ID: {{ order.orderID }} - Product ID: {{ order.productID }} - User ID: {{ order.userID }} - Quantity: {{ order.quantity }}
-            <!-- Add buttons for update and delete -->
+       
             <button @click="editOrder(order)">Edit</button>
             <button @click="deleteOrder(order.orderID)">Delete</button>
           </li>
         </ul>
       </div>
       
-      <!-- Form for adding/editing order -->
+     
       <div>
         <h2>{{ editing ? 'Edit Order' : 'Add Order' }}</h2>
         <form @submit.prevent="editing ? updateOrder() : addOrder()">
           <input type="number" v-model="form.productID" placeholder="Product ID" required>
           <input type="number" v-model="form.userID" placeholder="User ID" required>
           <input type="number" v-model="form.quantity" placeholder="Quantity" required>
-          <!-- Add other input fields for order details -->
+    
           <button type="submit">{{ editing ? 'Update' : 'Add' }}</button>
         </form>
       </div>
@@ -50,7 +67,7 @@ export default {
         productID: 0,
         userID: 0,
         quantity: 0,
-        // Add other necessary form fields
+       
       },
       editing: false,
       editingOrder: null,
@@ -79,16 +96,16 @@ export default {
     editOrder(order) {
       this.editing = true;
       this.editingOrder = order;
-      // Pre-fill the form with order details
+     
       this.form.productID = order.productID;
       this.form.userID = order.userID;
       this.form.quantity = order.quantity;
-      // Pre-fill other form fields as needed
+  
     },
     updateOrder() {
       axios.put(`/api/orders/${this.editingOrder.orderID}`, this.form)
         .then(response => {
-          // Update the order in the orders array
+      
           const index = this.orders.findIndex(o => o.orderID === this.editingOrder.orderID);
           if (index !== -1) {
             this.orders.splice(index, 1, response.data);
@@ -102,7 +119,7 @@ export default {
     deleteOrder(orderID) {
       axios.delete(`/api/orders/${orderID}`)
         .then(() => {
-          // Remove the order from the orders array
+       
           this.orders = this.orders.filter(order => order.orderID !== orderID);
         })
         .catch(error => {

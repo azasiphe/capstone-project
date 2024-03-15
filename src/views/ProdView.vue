@@ -1,11 +1,34 @@
 <template>
     <div class="products vh-100">
       <div>
-        <nav class="navbar">
-          <router-link to="/users" class="nav-link">Users</router-link>
-          <router-link to="/prod" class="nav-link">Products</router-link>
-          <router-link to="/orders" class="nav-link">Orders</router-link>
-        </nav>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+  <div class="container-fluid">
+    
+
+ 
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/users">Users</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/prod">Products</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/orders">Orders</router-link>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+     
+    </div>
+  </div>
+</nav>
   
         <div class="add-product">
           <button class="add" @click="openAddModal"><i class="bi bi-plus-square"></i> Add Product</button>
