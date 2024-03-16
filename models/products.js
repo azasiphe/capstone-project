@@ -13,10 +13,10 @@ const getSingle = async (id) => {
   return response;
 };
 
-const postProduct = async (car_name, quantity, amount, image_url, category) => {
+const postProduct = async (car_name, quantity, amount, image_url, category,top_speed,engine,transmission) => {
   let [item] = await pool.query(`
     INSERT INTO products (car_name, quantity, amount, image_url, category,top_speed, engine, transmission) VALUES (?,?,?,?,?,?,?,?)
-  `, [car_name, quantity, amount, image_url, category]);
+  `, [car_name, quantity, amount, image_url, category,top_speed,engine,transmission]);
   return getProducts();
 };
 

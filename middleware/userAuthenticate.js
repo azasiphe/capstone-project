@@ -14,16 +14,20 @@ const authenticateUser = async (req, res, next) => {
     const hashedPassword = await checkUser(emailAdd);
 
     if (!hashedPassword) {
-      throw new Error('Invalid email or password');
+      return res.status(400).json({ error: 'Invalid email' });
     }
+
     const passwordMatch = await bcrypt.compare(userPass, hashedPassword);
     if (!passwordMatch) {
-      throw new Error('Invalid email or password');
+      return res.status(400).json({ error: 'Invalid password' });
     }
+
     const token = jwt.sign({ emailAdd }, process.env.SECRET_KEY, { expiresIn: '2h' });
+    
+    console.log('Token:', token); 
 
     res.cookie('token', token, { httpOnly: true });
-    next();
+    res.status(200).json({ message: 'Login successful' });
   } catch (error) {
     console.error('Authentication Error:', error.message);
     res.status(400).json({ error: error.message });
