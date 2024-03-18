@@ -2,8 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { checkUser } from '../models/user.js';
 
-
-const authenticateUser = async (req, res, next) => {
+const authenticateUser = async (req, res, next) => {  
   try {
     const { emailAdd, userPass } = req.body;
 
@@ -33,7 +32,6 @@ const authenticateUser = async (req, res, next) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 const logout = async (req, res) => {
   try {
     res.clearCookie('token');

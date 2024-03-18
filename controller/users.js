@@ -1,9 +1,32 @@
 import { registerUser, getAllUsers, getUserById, updateUserById, deleteUserById } from '../models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
+import { checkUser } from '../models/user.js';
+
 const login = async (req, res) => {
-   
-  };
+  try {
+    const { emailAdd, userPass } = req.body;
+    const hashedPassword = await checkUser(emailAdd);
+
+    if (!hashedPassword) {
+      return res.status(400).json({ error: 'Invalid email' });
+    }
+
+    const passwordMatch = await bcrypt.compare(userPass, hashedPassword);
+    if (!passwordMatch) {
+      return res.status(400).json({ error: 'Invalid password' });
+    }
+
+    const token = jwt.sign({ emailAdd }, process.env.SECRET_KEY, { expiresIn: '2h' });
+
+    res.cookie('token', token, { httpOnly: true });
+    res.status(200).json({ message: 'Login successful', token });
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const getAll = async (req, res) => {
     try {
         const users = await getAllUsers();
@@ -13,7 +36,6 @@ const getAll = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 const registerUsers = async (req, res) => {
     const { firstName, lastName, Age, Gender, Role, emailAdd, userPass, userProfile } = req.body;
 
@@ -28,7 +50,6 @@ const registerUsers = async (req, res) => {
         res.status(500).json({ error: 'Failed to create user' });
     }
 };
-
 const updateUser = async (req, res) => {
     const { id } = req.params;
     const { firstName, lastName, Age, Gender, Role, emailAdd, userPass, userProfile } = req.body;
@@ -59,7 +80,6 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 const get = async (req, res) => {
     const id = req.params.id;
     try {
