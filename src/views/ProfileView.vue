@@ -32,91 +32,37 @@
         </tbody>
       </table>
 </template>
-
 <script>
-import { onMounted, computed,ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   setup() {
     const store = useStore();
+    const loggedInUser = computed(() => store.state.loggedInUser); // Retrieve logged-in user from Vuex
+    const userProfile = ref(null); // Initialize user profile
 
-    const users = computed(() => store.getters.allusers);
-
-    onMounted(() => {
-      store.dispatch('fetchusers');
-    });
-
-    const userID = ref(null);
-  const firstName = ref(null);
-  const lastName = ref(null);
-  const Age = ref(null);
-  const Gender = ref(null);
-  const Role = ref(null);
-  const emailAdd = ref(null);
-  const userpadd = ref(null);
-  const userProfile = ref(null);
-
-  const deleteUser = (userID) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-    if (confirmDelete) {
-      store.dispatch('deleteusers', userID);
-      window.alert('User has been deleted.');
-    }
-  };
-
-  const postUser = async () => {
-const newUser = {
-  firstName: firstName.value,
-  lastName: lastName.value,
-  Age: Age.value,
-  Gender: Gender.value,
-  Role: Role.value,
-  emailAdd: emailAdd.value,
-  userpadd: userpadd.value,
-  userProfile: userProfile.value
-};
-
-try {
-
-  await store.dispatch('postUsers', newUser);
-  
- 
-  await store.dispatch('fetchusers'); 
-  clearFields();
-  window.alert('User has been added.');
-} catch (error) {
-  console.error(error);
-  window.alert('Failed to add user.');
-}
-};
-
-  const clearFields = () => {
-    userID.value = null;
-    firstName.value = null;
-    lastName.value = null;
-    Age.value = null;
-    Gender.value = null;
-    Role.value = null;
-    emailAdd.value = null;
-    userpadd.value = null;
-    userProfile.value = null;
-  };
-
-
-    return {
-      users,
-      clearFields,
-      postUser,
-      deleteUser,
-      currentPage() {
-        return this.$route.name;
+    // Fetch logged-in user's profile information
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`https://capstone-project-x8jr.onrender.com/users/${loggedInUser.value.userID}`);
+        userProfile.value = response.data;
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        alert('Failed to fetch user profile.');
       }
     };
-  }
+
+    // Call fetchUserProfile when the component is mounted
+    onMounted(fetchUser);
+
+    return {
+      loggedInUser,
+      userProfile,
+    };
+  },
 };
 </script>
-
 <style scoped>
 .users-table {
   text-align: center;

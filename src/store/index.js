@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 axios.defaults.withCredentials = true;
 
 const baseUrl = 'https://capstone-project-x8jr.onrender.com';
@@ -21,6 +21,7 @@ export default createStore({
   getters: {
     allProducts: state => state.products,
     allusers: state => state.users,
+    user: state => state.user,
     getSingleProduct: state => state.product,
     isAuthenticated: state => state.isAuthenticated,
     cartItems: state => state.cart, 
@@ -78,8 +79,18 @@ export default createStore({
       try {
         const response = await axios.get(`${baseUrl}/products`);
         commit('SET_PRODUCTS', response.data);
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Products fetched successfully!',
+        });
       } catch (error) {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch products',
+        });
       }
     },
     async fetchProduct({ commit }, id) {
@@ -87,99 +98,131 @@ export default createStore({
         const response = await axios.get(`${baseUrl}/products/${id}`);
         console.log(response.data);
         commit('SET_PRODUCT', response.data);
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Product fetched successfully!',
+        });
       } catch (error) {
         console.error('Error fetching product:', error);
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch product',
+        });
       }
     },
-    async fetchUser({ commit }) {
+    async fetchUser({ commit }, userID) {
       try {
-        const response = await axios.get(`${baseUrl}/users/:id`);
+        const response = await axios.get(`${baseUrl}/users/${userID}`);
         commit('SET_USER', response.data);
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'User fetched successfully!',
+        });
       } catch (error) {
         console.error('Error fetching user:', error);
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch user',
+        });
       }
     },
     addToCart({ commit }, product) {
       commit('addToCart', product);
+      Swal.fire({ 
+        icon: 'success',
+        title: 'Success',
+        text: 'Product added to cart!',
+      });
     },
     logout({ commit }) {
       commit('clearToken');
       localStorage.removeItem('token');
       commit('setUser', null);
       commit('setIsAdmin', false);
+      Swal.fire({ 
+        icon: 'success',
+        title: 'Logged out',
+        text: 'You have been successfully logged out!',
+      });
     },
     async deleteProduct({ commit }, id) {
-      await axios.delete(baseUrl + `/products/${id}`);
-      window.location.reload();
+      try {
+        await axios.delete(baseUrl + `/products/${id}`);
+        window.location.reload();
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Product deleted successfully!',
+        });
+      } catch (error) {
+        console.error(error);
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to delete product',
+        });
+      }
     },
     async postProduct({ commit }, newItem) {
       try {
         await axios.post(baseUrl + '/products', newItem);
         commit('fetchProducts');
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Product added successfully!',
+        });
       } catch (error) {
         console.error(error);
         window.location.reload();
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to add product',
+        });
       }
     },
     async editProduct({ commit }, productData) {
       try {
         await axios.patch(`${baseUrl}/products/${productData.id}`, productData);
         commit('updateProduct', productData);
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Product edited successfully!',
+        });
       } catch (error) {
         console.error(error);
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to edit product',
+        });
       }
     },
     async fetchUsers({ commit }) {
       try {
         const response = await axios.get(`${baseUrl}/users`);
         commit('SET_USERS', response.data);
+        Swal.fire({ 
+          icon: 'success',
+          title: 'Success',
+          text: 'Users fetched successfully!',
+        });
       } catch (error) {
         console.error('Error fetching users:', error);
+        Swal.fire({ 
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch users',
+        });
       }
     },
-  
-    async postUser({ commit }, newUser) {
-      try {
-        await axios.post(`${baseUrl}/users`, newUser);
-        commit('ADD_USER', newUser);
-      } catch (error) {
-        console.error('Error adding user:', error);
-      }
-    },
-    async editUser({ commit }, editedUser) {
-      try {
-        await axios.put(`${baseUrl}/users/${editedUser.userID}`, editedUser);
-        commit('EDIT_USER', editedUser);
-      } catch (error) {
-        console.error('Error editing user:', error);
-      }
-    },
-    async deleteUser({ commit }, userID) {
-      try {
-        await axios.delete(`${baseUrl}/users/${userID}`);
-        commit('DELETE_USER', userID);
-      } catch (error) {
-        console.error('Error deleting user:', error);
-      }
-    },
-    async placeOrder({ commit, state }) {
-      try {
-        const userId = state.userID; 
-        const cartItems = state.cartItems;
-        for (const product of cartItems) {
-          const orderData = {
-            productID: product.id,
-            userID: userID,
-            quantity: product.quantity,
-          };
-          await axios.post('https://capstone-project-x8jr.onrender.com/orders', orderData); 
-        }
-      
-        commit('clearCart');
-      } catch (error) {
-        console.error('Error placing order:', error);
-      }
-    }
   },
- 
 });
+ 
+

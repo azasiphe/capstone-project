@@ -108,9 +108,9 @@ export default {
         
         this.firstName = '';
         this.lastName = '';
-        this.age = '';
-        this.gender = '';
-        this.role = '';
+        this.Age = '';
+        this.Gender = '';
+        this.Role = '';
         this.emailAdd = '';
         this.userPass = '';
         this.userProfile = '';
