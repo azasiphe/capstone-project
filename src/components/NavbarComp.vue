@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <router-link to="/" class="navbar-brand">Home</router-link>
+      <router-link to="/" class="navbar-brand">Logo</router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -13,54 +13,63 @@
           <li class="nav-item">
             <router-link to="/about" class="nav-link">About</router-link>
           </li>
-          <li class="nav-item">
-            <router-link to="/products" class="nav-link">Garage</router-link>
-          </li>
+        
           <li class="nav-item">
             <router-link to="/admin" class="nav-link">Admin</router-link>
           </li>
-          <!-- Display cart and checkout links if user is authenticated -->
-          <li v-if="isLoggedIn" class="nav-item">
+         
+        
+          <li  class="nav-item">
+          
+            <router-link to="/products" class="nav-link">Garage</router-link>
+          </li>
+          <li  class="nav-item">
             <router-link to="/cart" class="nav-link">
               <i class="bi bi-bag"></i> 
             </router-link>
           </li>
-          <li v-if="isLoggedIn" class="nav-item">
-            <router-link to="/checkout" class="nav-link">Checkout</router-link>
+          <li class="nav-item">
+            <router-link to="/contact" class="nav-link">Contact</router-link>
           </li>
-          <!-- Display user profile dropdown if logged in -->
-          <li v-if="isLoggedIn" class="nav-item dropdown">
+          <li  class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle" style="font-size: 24px;"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li><router-link to="/profile" class="dropdown-item">Profile</router-link></li>
+          <li class="nav-item">
+            <router-link to="/register" class="nav-link " id="r">Register</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/login" class="nav-link" id="r">Login</router-link>
+          </li>
+        </ul>
+    </li>
+          <!-- Display user profile dropdown if logged in -->
+          <!-- <li  class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle" style="font-size: 24px;"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><router-link to="/profile"  class="dropdown-item">Profile</router-link></li>
               <li><router-link to="/logout" class="dropdown-item">Logout</router-link></li>
             </ul>
           </li>
-          <!-- Display register and login links if not logged in -->
-          <li v-if="!isLoggedIn" class="nav-item">
-            <router-link to="/register" class="nav-link">Register</router-link>
-          </li>
-          <li v-if="!isLoggedIn" class="nav-item">
-            <router-link to="/login" class="nav-link">Login</router-link>
-          </li>
-        </ul>
+           -->
+    </ul>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-  // computed: {
-  //   isLoggedIn() {
-  //     return this.$store.state.token !== null;
-  //   }
-  // }
+  computed: {
+    ...mapState(['isAuthenticated'])
+  }
 };
 </script>
-
   <style>
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -102,7 +111,9 @@ export default {
     border-radius: 5px;
     color: blue;
   }
-
+#r{
+color: black;
+}
 
 
 

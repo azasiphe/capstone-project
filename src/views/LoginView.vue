@@ -1,78 +1,83 @@
 <template>
-
-
-  <body>
-    <div class="container">
-
-        <div class="login">
-    
-            <h1>Login Form</h1>
-    
-            <form @submit.prevent="login" class="needs-validation" novalidate>
-                <div class="input-box">
-                  <input type="email" v-model="emailAdd" class="form-control" id="email" placeholder="Email" required>
+  <div class="container">
+    <div class="login">
+      <h1>Login Form</h1>
+      <form @submit.prevent="login" class="needs-validation" novalidate>
+        
+        <div class="input-box">
+          <input type="email" v-model="emailAdd" class="form-control" id="email" placeholder="Email" required>
           <div class="invalid-feedback">Please provide a valid email.</div>
-                    <i class="fa fa-envelope"></i>
-                </div>
-    
-                <div class="input-box">
-                  <input type="password" v-model="userPass" class="form-control" id="password" placeholder="Password" required>
-          <div class="invalid-feedback">Please provide your password.</div>
-                    <i class="fa fa-lock"></i>
-                  </div>
-                 <a href="#" class="for_get">Forget Your Password?</a>
-                 
-    
-              
-    
-                 <button type="submit" class="btn btn-primary">Login</button>
-    
-                
-                  <p v-if="loginError" class="mt-3 error-message">{{ loginError }}</p>
-                  <p class="mt-3 ">Don't have an account? <router-link to="/register">Register</router-link></p>
-              
-    
-            </form>
-    
+          <i class="fa fa-envelope"></i>
         </div>
-    
+      
+        <div class="input-box">
+          <input type="password" v-model="userPass" class="form-control" id="password" placeholder="Password" required>
+          <div class="invalid-feedback">Please provide your password.</div>
+          <i class="fa fa-lock"></i>
+        </div>
+       
+        <a href="#" class="for_get">Forget Your Password?</a>
+       
+        <button type="submit" class="btn btn-primary">Login</button>
+     
+        <p v-if="loginError" class="mt-3 error-message">{{ loginError }}</p>
+     
+        <p class="mt-3">Don't have an account? <router-link to="/register">Register</router-link></p>
+      </form>
     </div>
-
-</body>
+  </div>
 </template>
-
 <script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
       emailAdd: '',
       userPass: '',
+      loginError: ''
     };
   },
   methods: {
+    ...mapActions(['login']),
     async login() {
-      this.$store.commit('clearErrors');
       try {
-        await this.$store.dispatch('login', {
+        const response = await axios.post('https://capstone-project-x8jr.onrender.com/login', {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         });
-        if (!this.$store.state.loginError) {
-          alert('Successfully logged in!');
+        const token = response.data.token;
+        
+        localStorage.setItem('token', token);
+
+    
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Welcome back!',
+          text: 'Login successful!',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
           this.$router.push('/');
-        }
+        });
       } catch (error) {
-        console.error(error);
-        if (error.response && error.response.status === 401) {
-          alert('Invalid credentials! Please try again.');
+        if (error.response && error.response.status === 404) {
+          this.loginError = 'User not found. Please sign up first.';
         } else {
-          alert('Login failed! Please try again.');
+          console.error('Error logging in:', error);
+          alert('An error occurred during login. Please try again later.');
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
+
+
+
 
 <style  scoped>
 body {

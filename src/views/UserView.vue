@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="users-table vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-black">
   <div class="container-fluid">
@@ -13,7 +13,7 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link" to="/prod">Products</router-link>
+          <router-link class="nav-link" to="/admin">Products</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/users">Users</router-link>
@@ -75,54 +75,64 @@
     <button class="add-user-btn" @click="openAddUserModal"><i class="bi bi-plus-square"></i>Add User</button>
 
     <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Role</th>
-          <th>Email</th>
-          <th>User Profile</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.userID">
-          <td>{{ user.userID }}</td>
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>{{ user.Age }}</td>
-          <td>{{ user.Gender }}</td>
-          <td>{{ user.Role }}</td>
-          <td>{{ user.emailAdd }}</td>
-          <td>{{ user.userProfile }}</td>
-          <td><button class="edit" @click="editUser(user)">edit</button></td>
-          <td><button class="delete" @click="deleteUser(user.userID)">delete</button></td>
-        </tr>
-      </tbody>
-    </table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>User Profile</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.userID">
+            <td>{{ user.userID }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.Age }}</td>
+            <td>{{ user.Gender }}</td>
+            <td>{{ user.Role }}</td>
+            <td>{{ user.emailAdd }}</td>
+            <td>{{ user.userProfile }}</td>
+            <td><button  class="edit" @click="editUser(user.userID)">edit</button> </td>
+        <td><button class="delete" @click="deleteUser(user.userID)">delete</button></td>
+      
+          </tr>
+        </tbody>
+      </table>
   </div>
 </template>
 
 <script>
-import { onMounted, computed, ref } from 'vue';
-import { useStore } from 'vuex';
-
-export default {
-  setup() {
-    const store = useStore();
-
-    const users = computed(() => store.getters.allusers);
-    const showAddUserModal = ref(false);
+ import { onMounted, computed,ref } from 'vue';
+  import { useStore } from 'vuex';
+  
+  export default {
+    setup() {
+      const store = useStore();
+  
+      const users = computed(() => store.getters.allusers);
+      const showAddUserModal = ref(false);
     const editUserDetails = ref(null);
     const modalTitle = ref('');
-
-    onMounted(() => {
-      store.dispatch('fetchusers');
-    });
+      onMounted(() => {
+        store.dispatch('fetchUsers');
+      });
+  
+      const userID = ref(null);
+    const firstName = ref(null);
+    const lastName = ref(null);
+    const Age = ref(null);
+    const Gender = ref(null);
+    const Role = ref(null);
+    const emailAdd = ref(null);
+    const userpadd = ref(null);
+    const userProfile = ref(null);
 
     const deleteUser = (userID) => {
       const confirmDelete = window.confirm('Are you sure you want to delete this user?');
@@ -131,7 +141,6 @@ export default {
         window.alert('User has been deleted.');
       }
     };
-
     const openAddUserModal = () => {
       showAddUserModal.value = true;
       modalTitle.value = 'Add User';
@@ -177,7 +186,17 @@ export default {
       editUser,
       saveUser,
       modalTitle,
-      editUserDetails
+      editUserDetails,
+      deleteUser,
+     userID ,
+  firstName ,
+  lastName ,
+  Age ,
+     Gender ,
+  Role,
+     emailAdd,
+    userpadd ,
+    userProfile 
     };
   }
 };

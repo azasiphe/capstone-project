@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavbarComp />
-    <SpinnerComp v-if="loading" />
+    <!-- <SpinnerComp v-if="loading" /> -->
     <router-view />
   </div>
 </template>
@@ -9,7 +9,7 @@
 <script>
 import NavbarComp from './components/NavbarComp.vue';
 import SpinnerComp from './components/SpinnerComp.vue';
-
+import { mapActions } from 'vuex';
 export default {
   components: {
     NavbarComp,
@@ -21,13 +21,23 @@ export default {
       loading: true 
     };
   },
-  created() {
+  // created() {
   
-    setTimeout(() => {
-      this.loading = false; 
-    }, 3000); 
-  }
-}
+  //   setTimeout(() => {
+  //     this.loading = false; 
+  //   }, 3000); 
+  // },
+
+methods: {
+    ...mapActions(['fetchUser'])
+  },
+  created() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      
+      this.fetchUser();
+    }
+  }}
 </script>
 
 <style>

@@ -58,56 +58,80 @@
   </div>
 </template>
 
+
 <script>
+import axios from 'axios';
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {
       firstName: '',
       lastName: '',
-      Age: null,
+      Age: '',
       Gender: '',
       Role: '',
       emailAdd: '',
       userPass: '',
       userProfile: '',
       saveAccount: false,
-      submitting: false
+      submitting: false,
     };
   },
   methods: {
+    ...mapActions(['register']),
     async register() {
-      this.submitting = true;
+  
+      if (!this.firstName || !this.lastName || !this.emailAdd || !this.userPass) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
       try {
-        await this.$store.dispatch('register', {
+        this.submitting = true;
+
+    
+        const response = await axios.post('https://capstone-project-x8jr.onrender.com/users', {
           firstName: this.firstName,
           lastName: this.lastName,
-          age: this.Age,
-          gender: this.Gender,
-          role: this.Role,
-          email: this.emailAdd,
-          password: this.userPass,
+          Age: this.Age,
+          Gender: this.Gender,
+          Role: this.Role,
+          emailAdd: this.emailAdd,
+          userPass: this.userPass,
           userProfile: this.userProfile,
-          saveAccount: this.saveAccount,
         });
-        if (!this.$store.state.registrationError) {
-          alert('Account created successfully!');
-          this.$router.push('/');
-        }
+        const token = response.data.token;
+        document.cookie = `token=${token}; path=/`;
+        alert('Registration successful!');
+        console.log(response.data);
+
+        
+        this.firstName = '';
+        this.lastName = '';
+        this.age = '';
+        this.gender = '';
+        this.role = '';
+        this.emailAdd = '';
+        this.userPass = '';
+        this.userProfile = '';
+        this.saveAccount = false;
       } catch (error) {
-        console.error(error);
         if (error.response && error.response.status === 409) {
-          alert('User already exists! Please log in.');
+          alert('This email address is already registered. Please log in instead.');
           this.$router.push('/login');
         } else {
-          alert('Registration failed! Please try again.');
+          console.error('Error registering user:', error);
+          alert('An error occurred during registration. Please try again later.');
         }
-      } finally {
+      }  
+      finally {
         this.submitting = false;
       }
     },
   },
 };
 </script>
+
 
 <style scoped>
 body {

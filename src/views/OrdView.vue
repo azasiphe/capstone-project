@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link" to="/prod">Products</router-link>
+          <router-link class="nav-link" to="/admin">Products</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/orders">Orders</router-link>
@@ -29,21 +29,36 @@
     </div>
   </div>
 </nav>
- <div>
-     
-      <div v-if="orders.length">
+<div class="container">
+      <div>
         <h2>Orders</h2>
-        <ul>
-          <li v-for="order in orders" :key="order.orderID">
-            Order ID: {{ order.orderID }} - Product ID: {{ order.productID }} - User ID: {{ order.userID }} - Quantity: {{ order.quantity }}
-       
-            <button @click="editOrder(order)">Edit</button>
-            <button @click="deleteOrder(order.orderID)">Delete</button>
-          </li>
-        </ul>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Product ID</th>
+              <th>User ID</th>
+              <th>Quantity</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="order in orders" :key="order.orderID">
+              <td>{{ order.orderID }}</td>
+              <td>{{ order.productID }}</td>
+              <td>{{ order.userID }}</td>
+              <td>{{ order.quantity }}</td>
+              <td>{{ order.order_date }}</td>
+              <td>
+                <button @click="editOrder(order)" class="btn btn-primary">Edit</button>
+                <button @click="deleteOrder(order.orderID)" class="btn btn-danger">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       
-     
       <div>
         <h2>{{ editing ? 'Edit Order' : 'Add Order' }}</h2>
         <form @submit.prevent="editing ? updateOrder() : addOrder()">
@@ -51,10 +66,12 @@
           <input type="number" v-model="form.userID" placeholder="User ID" required>
           <input type="number" v-model="form.quantity" placeholder="Quantity" required>
     
-          <button type="submit">{{ editing ? 'Update' : 'Add' }}</button>
+          <button type="submit" class="btn btn-primary">{{ editing ? 'Update' : 'Add' }}</button>
+          <button type="button" class="btn btn-secondary" @click="cancelEdit" v-if="editing">Cancel</button>
         </form>
       </div>
     </div>
+  
 </template>
 <script>
 import axios from 'axios';
@@ -64,9 +81,9 @@ export default {
     return {
       orders: [],
       form: {
-        productID: 0,
-        userID: 0,
-        quantity: 0,
+        productID: (''),
+        userID: (''),
+        quantity: (''),
        
       },
       editing: false,
@@ -75,16 +92,16 @@ export default {
   },
   methods: {
     fetchOrders() {
-      axios.get('/api/orders')
-        .then(response => {
-          this.orders = response.data;
-        })
-        .catch(error => {
-          console.error('Error fetching orders:', error);
-        });
-    },
+  axios.get('https://capstone-project-x8jr.onrender.com/orders')
+    .then(response => {
+      this.orders = response.data;
+    })
+    .catch(error => {
+      console.error('Error fetching orders:', error);
+    });
+},
     addOrder() {
-      axios.post('/api/orders', this.form)
+      axios.post('https://capstone-project-x8jr.onrender.com/orders', this.form)
         .then(response => {
           this.orders.push(response.data);
           this.resetForm();
@@ -100,10 +117,10 @@ export default {
       this.form.productID = order.productID;
       this.form.userID = order.userID;
       this.form.quantity = order.quantity;
-  
+     this.form.order_date = order.order_date
     },
     updateOrder() {
-      axios.put(`/api/orders/${this.editingOrder.orderID}`, this.form)
+      axios.put(`/https://capstone-project-x8jr.onrender.com/orders/${this.editingOrder.orderID}`, this.form)
         .then(response => {
       
           const index = this.orders.findIndex(o => o.orderID === this.editingOrder.orderID);
@@ -117,7 +134,7 @@ export default {
         });
     },
     deleteOrder(orderID) {
-      axios.delete(`/api/orders/${orderID}`)
+      axios.delete(`/https://capstone-project-x8jr.onrender.com/orders/${orderID}`)
         .then(() => {
        
           this.orders = this.orders.filter(order => order.orderID !== orderID);
@@ -130,7 +147,7 @@ export default {
       this.form.productID = 0;
       this.form.userID = 0;
       this.form.quantity = 0;
-     
+      this.form.order_date= 0; 
        },
     cancelEdit() {
       this.editing = false;
