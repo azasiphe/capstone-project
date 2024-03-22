@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <footer id="footer" class="footer-1">
 <div class="main-footer widgets-dark typo-light">
 <div class="container">
@@ -142,4 +142,5 @@ box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 transition: all 250ms ease-in-out 0s;
 
 }
-</style>
+</style> -->
+<template></template>
