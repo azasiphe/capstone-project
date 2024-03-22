@@ -14,6 +14,7 @@ export default createStore({
     users: [],
     user:[],
     token: null,
+    loggedInUser: null,
     isAuthenticated: false
     
    
@@ -69,9 +70,13 @@ export default createStore({
       state.isAuthenticated = false;
     },
     LOGOUT(state) {
+      state.loggedInUser = null;
       state.token = null;
       state.isAuthenticated = false;
       state.user = null;
+    },
+    setLoggedInUser(state, user) {
+      state.loggedInUser = user;
     } 
   },
   actions: {
@@ -79,11 +84,11 @@ export default createStore({
       try {
         const response = await axios.get(`${baseUrl}/products`);
         commit('SET_PRODUCTS', response.data);
-        Swal.fire({ 
-          icon: 'success',
-          title: 'Success',
-          text: 'Products fetched successfully!',
-        });
+        // Swal.fire({ 
+        //   icon: 'success',
+        //   title: 'Success',
+        //   text: 'Products fetched successfully!',
+        // });
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -141,6 +146,7 @@ export default createStore({
     logout({ commit }) {
       commit('clearToken');
       localStorage.removeItem('token');
+      commit('logout');
       commit('setUser', null);
       commit('setIsAdmin', false);
       Swal.fire({ 
@@ -221,8 +227,10 @@ export default createStore({
           text: 'Failed to fetch users',
         });
       }
+    }
+  
     },
   },
-});
+);
  
 

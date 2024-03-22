@@ -1,6 +1,10 @@
 <template>
   <div class="products">
-    <h1 class="display-1" :style="{ }">{{ typedHeading }}</h1>
+    <button>
+      <div>
+        <h1 class="display-1">{{ typedHeading }}</h1>
+      </div>
+    </button>
     <div class="container mt-4">
       <div class="d-flex align-items-center"> 
         <div class="dropdown">
@@ -8,8 +12,8 @@
             Filter
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><button @click="sortByPrice" class="btn btn-primary">Sort by Price</button></li>
-            <li><button @click="sortByAlphabet" class="btn btn-primary">Sort Alphabetically</button></li>
+            <li @click="sortByPrice" class="btn btn-primary">Sort by Price</li>
+            <li @click="sortByAlphabet" class="btn btn-primary">Sort Alphabetically</li>
           </ul>
         </div>
         <input type="text" v-model="searchTerm" placeholder="Search..." class="form-control mb-2 ml-4" />
@@ -17,7 +21,7 @@
 
       <div class="row">
         <div v-for="product in filteredProducts" :key="product.id" class="col-md-4">
-          <div class="card mb-4" @mouseover="hovering = product.id" @mouseleave="hovering = null">
+          <div :class="{ 'card': true, 'charizard': product.isCharizard }" @mouseover="hovering = product.id" @mouseleave="hovering = null">
             <h5 class="card-title">{{ product.car_name }}</h5>
             <img :src="product.image_url" width="60%" class="img-fluid" :alt="product.car_name" />
             <p class="card-text">Amount: {{ product.amount }}</p>
@@ -29,6 +33,7 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -106,18 +111,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 h1
 { 
+
   color: aliceblue;
   text-decoration: underline;
   text-shadow: blue 3px 4px 2px;
 }
 h5{
-  color: aliceblue;
+  color:white;
   font-size: 25px;
-  text-shadow:blue 8px 8px 20px;
+  text-shadow:red 8px 8px 20px;
 }
 p{
   color: white;
@@ -127,27 +133,6 @@ border-radius: 50%;
 border:2px  solid blue;
 font-size: 15px;
   text-shadow:blue 8px 8px 20px;
-}
-
-.card {
-  width: 80%; 
-  border: none;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.card:hover {
-  background-color: rgba(258, 258, 258, 0.3);
-}
-
-.row {
-  position: relative;
-  top: 50px;
-}
-
-.card .card-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .card button {
@@ -168,6 +153,8 @@ input.form-control {
   width: 50%;
   border-color: blue ;
  margin: 0 0 0 29%;
+ position: relative;
+ top:25px;
  
 }
 .btn-primary:hover {
@@ -190,5 +177,179 @@ input.form-control {
 
 #ima {
   width: 60%;
+}
+@property --border-angle-1 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 90deg;
+}
+
+@property --border-angle-3 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 180deg;
+}
+
+
+:root {
+	--bright-blue: rgb(0, 100, 255);
+	--bright-green: rgb(0, 255, 0);
+	--bright-red: rgb(255, 0, 0);
+	--background: black;
+	--foreground: white;
+	--border-size: 2px;
+	--border-radius: 0.75em;
+}
+
+
+@supports (color: color(display-p3 1 1 1)) {
+	:root {
+		--bright-blue: color(display-p3 0 0.2 1);
+		--bright-green: color(display-p3 0.4 1 0);
+		--bright-red: color(display-p3 1 0 0);
+	}
+}
+
+@keyframes rotateBackground {
+	to { --border-angle-1: 360deg; }
+}
+
+@keyframes rotateBackground2 {
+	to { --border-angle-2: -270deg; }
+}
+
+@keyframes rotateBackground3 {
+	to { --border-angle-3: 540deg; }
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	min-height: 100dvh;
+	display: grid;
+	place-content: center;
+	margin: 0;
+	font-family: "Aspekta";
+}
+
+button {
+	--border-angle-1: 0deg;
+	--border-angle-2: 90deg;
+	--border-angle-3: 180deg;
+	color: inherit;
+	font-size: calc(0.8rem + 4vmin);
+	font-family: inherit;
+	border: 0;
+	padding: var(--border-size);
+	display: flex;
+  position: relative;
+  top:20px;
+  margin: 0 0 0 7%;
+	width: max-content;
+	border-radius: var(--border-radius);
+	background-color: transparent;
+	background-image: conic-gradient(
+			from var(--border-angle-1) at 10% 15%,
+			transparent,
+			var(--bright-blue) 10%,
+			transparent 30%,
+			transparent
+		),
+		conic-gradient(
+			from var(--border-angle-2) at 70% 60%,
+			transparent,
+			var(--bright-green) 10%,
+			transparent 60%,
+			transparent
+		),
+		conic-gradient(
+			from var(--border-angle-3) at 50% 20%,
+			transparent,
+			var(--bright-red) 10%,
+			transparent 50%,
+			transparent
+		);
+	animation: 
+		rotateBackground 3s linear infinite,
+		rotateBackground2 8s linear infinite,
+		rotateBackground3 13s linear infinite;
+}
+
+
+button div {
+	background: var(--background); 
+	padding: 1em 1.5em;
+	border-radius: calc(var(--border-radius) - var(--border-size));
+	color: var(--foreground);
+}
+
+.card {
+  width: 90%; 
+  border: none;
+  color: antiquewhite;
+  background-color: rgba(255, 255, 255, 0.1);
+  position: relative;
+  top:30px;
+  height: auto;
+  overflow: hidden;
+  margin: 20px;
+  overflow: hidden;
+  z-index: 10;
+  touch-action: none;
+  
+  --border-color1: var(--bright-blue);
+  --border-color2: var(--bright-green);
+  --border-color3: var(--bright-red);
+  --border-size: 2px;
+  --transition-duration: 0.3s;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  
+  border: var(--border-size) solid var(--border-color1);
+  transition: border-color var(--transition-duration);
+  
+  background-color: #040712;
+  background-image: var(--front);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transform-origin: center;
+}
+.card:hover {
+  --border-color1: var(--bright-red);
+  --border-color2: var(--bright-blue);
+  --border-color3: var(--bright-green);
+}
+
+.card.charizard {
+  --color1: var(--charizard1);
+  --color2: var(--charizard2);
+  --front: var(--charizardfront);
+}
+.card.charizard:before,
+.card.charizard:after {
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    var(--color1) 25%,
+    transparent 47%,
+    transparent 53%,
+    var(--color2) 75%,
+    transparent 100%
+  );
+}
+.card.charizard:hover:before {
+  background-image: linear-gradient(
+    110deg,
+    transparent 25%,
+    var(--color1) 48%,
+    var(--color2) 52%,
+    transparent 75%
+  );
 }
 </style>

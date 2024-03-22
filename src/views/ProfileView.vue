@@ -31,6 +31,7 @@
           </tr>
         </tbody>
       </table>
+      
 </template>
 <script>
 import { computed, ref } from 'vue';
@@ -54,7 +55,7 @@ export default {
     };
 
     // Call fetchUserProfile when the component is mounted
-    onMounted(fetchUser);
+    onMounted(fetchUser); 
 
     return {
       loggedInUser,

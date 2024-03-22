@@ -30,81 +30,71 @@
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { mapActions } from 'vuex';
+import { mapActions, commit } from 'vuex';
 
 export default {
   data() {
     return {
       emailAdd: '',
       userPass: '',
-      loginError: ''
+      loginError: '',
     };
   },
   methods: {
     ...mapActions(['login', 'fetchUser']),
     async login() {
-  try {
-    const response = await axios.post('https://capstone-project-x8jr.onrender.com/login', {
-      emailAdd: this.emailAdd,
-      userPass: this.userPass
-    });
-    const token = response.data.token;
-    
-    localStorage.setItem('token', token);
-    const userID = response.data.id;
-    await this.fetchUser(userID);
-    
-    if (localStorage.getItem('user')) {
-  
-      this.$router.push('/');
-      
-      Swal.fire({
-        icon: 'success',
-        title: 'Welcome back!',
-        text: 'Login successful!',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    } else {
-     
-      Swal.fire({
-        icon: 'error',
-        title: 'fail to login',
-        text: 'try again',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    }
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      this.loginError = 'User not found. Please sign up first.';
-    } else {
-      console.error('Error logging in:', error);
-      alert('An error occurred during login. Please try again later.');
-    }
-  }
-},
-async fetchUser(userID) {
-  try {
-    const response = await axios.get(`https://capstone-project-x8jr.onrender.com/users/1`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+      try {
+        const response = await axios.post('https://capstone-project-x8jr.onrender.com/login', {
+          email: this.emailAdd,
+          password: this.userPass
+        });
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        const userID = response.data.id;
+        await this.fetchUser(userID);
+        commit('setLoggedInUser', response.data);
+        if (localStorage.getItem('user')) {
+          this.$router.push('/');
+          Swal.fire({
+            icon: 'success',
+            title: 'Welcome back!',
+            text: 'Login successful!',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Fail to login',
+            text: 'Try again',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          this.loginError = 'User not found. Please sign up first.';
+        } else {
+          console.error('Error logging in:', error);
+        }
       }
-    });
-
-    localStorage.setItem('user', JSON.stringify(response.data));
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-    alert('An error occurred while fetching user details.');
-  }
-}
-
+    },
+    async fetchUser(userID) {
+      try {
+        const response = await axios.get(`https://capstone-project-x8jr.onrender.com/users/${userID}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        localStorage.setItem('user', JSON.stringify(response.data));
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+        alert('An error occurred while fetching user details.');
+      }
+    }
   }
 };
 </script>
-
-
-
 
 <style  scoped>
 body {

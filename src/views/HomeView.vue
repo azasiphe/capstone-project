@@ -19,6 +19,7 @@
     <button>↻</button>
   </div>
 </footer>
+
 </template>
 <script>
 export default {

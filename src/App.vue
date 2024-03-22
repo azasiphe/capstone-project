@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <NavbarComp />
+    <footerComp />
     <!-- <SpinnerComp v-if="loading" /> -->
     <router-view />
   </div>
@@ -8,13 +9,14 @@
 
 <script>
 import NavbarComp from './components/NavbarComp.vue';
-import SpinnerComp from './components/SpinnerComp.vue';
+import footerComp from './components/footerComp.vue';
+// import SpinnerComp from './components/SpinnerComp.vue';
 import { mapActions } from 'vuex';
 export default {
   components: {
     NavbarComp,
-    SpinnerComp
-  
+    // SpinnerComp,
+  footerComp
   },
   data() {
     return {

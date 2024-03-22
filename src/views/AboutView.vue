@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div :class="{ 'menuopen': isMenuOpen }" id="page">
+    
        
         <section id="vision" class="section" >
           
@@ -33,7 +33,7 @@
           </div>
         </section>
       </div>
-    </div>
+
   </template>
   
   

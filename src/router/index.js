@@ -37,11 +37,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: () => import('../views/AdminView.vue'),
-    meta: {
-      requiresAuth: true, // Indicates that authentication is required for this route
-      requiresRole: true, // Indicates that a specific role is required for this route
-      requiredRole: 'admin' // Specifies the required role for this route
-    }
+    // meta: {
+    //   requiresAuth: true, // Indicates that authentication is required for this route
+    //   requiresRole: true, // Indicates that a specific role is required for this route
+    //   requiredRole: 'admin' // Specifies the required role for this route
+    // }
   },
   {
     path: '/products',
@@ -50,11 +50,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/ProductsView.vue'),
-    meta: {
-      requiresAuth: true, // Indicates that authentication is required for this route
-      requiresRole: true, // Indicates that a specific role is required for this route
-      requiredRole: 'user' // Specifies the required role for this route
-    }
+    // meta: {
+    //   requiresAuth: true, // Indicates that authentication is required for this route
+    //   requiresRole: true, // Indicates that a specific role is required for this route
+    //   requiredRole: 'user' // Specifies the required role for this route
+    // }
   },
   {
     path: '/logout', 
@@ -80,11 +80,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/CartView.vue'),
-    meta: {
-      requiresAuth: true, // Indicates that authentication is required for this route
-      requiresRole: true, // Indicates that a specific role is required for this route
-      requiredRole: 'user' // Specifies the required role for this route
-    }
+    // meta: {
+    //   requiresAuth: true, // Indicates that authentication is required for this route
+    //   requiresRole: true, // Indicates that a specific role is required for this route
+    //   requiredRole: 'user' // Specifies the required role for this route
+    // }
   },
   {
     path: '/register',
@@ -141,7 +141,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login'); 
   } else {
-    if (to.meta.requiresRole && userRole !== to.meta.requiredRole) {
+    if (to.meta.requiresRole && Role !== to.meta.requiredRole) {
       next('/unauthorized');
     } else {
       next(); 

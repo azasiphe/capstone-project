@@ -102,10 +102,11 @@
             <td><button  class="edit" @click="editUser(user.userID)">edit</button> </td>
         <td><button class="delete" @click="deleteUser(user.userID)">delete</button></td>
       
-          </tr>
+          </tr> 
         </tbody>
       </table>
   </div>
+  
 </template>
 
 <script>

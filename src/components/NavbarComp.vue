@@ -44,17 +44,13 @@
           </li>
         </ul>
     </li>
-          <!-- Display user profile dropdown if logged in -->
-          <!-- <li  class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle" style="font-size: 24px;"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <li><router-link to="/profile"  class="dropdown-item">Profile</router-link></li>
-              <li><router-link to="/logout" class="dropdown-item">Logout</router-link></li>
-            </ul>
-          </li>
-           -->
+          <li v-if="isAuthenticated" class="nav-item">
+        <router-link to="/profile" class="nav-link">Profile</router-link>
+      </li>
+      <li v-if="isAuthenticated" class="nav-item">
+        <router-link to="/logout" class="nav-link">Logout</router-link>
+      </li>
+          
     </ul>
       </div>
     </div>
